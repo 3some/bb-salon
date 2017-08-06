@@ -2102,7 +2102,7 @@ a {
     html body{
         overflow-y: hidden;
     }
-    #wrap{
+    #wrap,#app{
         width: 200%;
     }
     html body .site-wrap .wrap-product,.wrap-cart-checkout{
