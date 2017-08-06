@@ -110,7 +110,7 @@ class HomePage extends React.Component {
     const postList = this.state.postList;
     const listCart = this.state.listCart;
     return (
-      <div id="wrap" className="table dots-loading">
+      <div id="" className="table dots-loading">
         <Menu/>
         <input type="checkbox" id="nav-trigger" className="nav-trigger" />
         <label htmlFor="nav-trigger" />
