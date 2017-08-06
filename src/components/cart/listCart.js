@@ -73,7 +73,7 @@ class ListCart extends React.Component {
 
     line_vals[0].order_line = orderLine;
 
-      let orderCart = postAction.orderCart(line_vals);
+    let orderCart = postAction.orderCart(line_vals);
     orderCart.then(rss => {
         return rss.json();
       }).then( listData => {
@@ -102,13 +102,13 @@ class ListCart extends React.Component {
                   <thead>
                   <tr>
                     <th>
-                        <span className="col-trash">
-                          <a data-bind="fastclick:clearCart"><i className="fa-trash" /></a>
-                        </span>
-                      <a id="cartfaback" className="fa-back" data-bind="fastclick:clearCurrentOrder" />
+                      <span className="col-trash">
+                        <a data-bind="fastclick:clearCart"><i className="fa-trash" /></a>
+                      </span>
+                      <a id="cartfaback" className="fa-back" />
                     </th>
                     <th colSpan={4} className="theadcarttotal">
-                      <span className="col-cart text-c">Giỏ hàng ({/* ko text: totalQty */}4{/* /ko */} Items)</span>
+                      <span className="col-cart text-c">Giỏ hàng (Items)</span>
                     </th>
                   </tr>
                   <tr>
@@ -120,29 +120,34 @@ class ListCart extends React.Component {
                   { listCart.map( (listItem, index) =>
                   <tr>
                     <td className="cart-img">
-                      <div className="number-item" data-bind="text:$data.quantity">{index + 1}</div>
+                      <div className="number-item" >{index + 1}</div>
                       <div className="pro-img">
-                        <img  className="circular-img" src="/static/images/alginato-cromatico-phase-plus_medium.jpg" title="Default Title" />
+                        <img  className="circular-img" src={'data:image/png;base64, ' + listItem.image_medium } title="Default Title" />
                       </div>
                     </td>
                     <td className="cart-title">
                       <div className="name_cart">
                         <span> {listItem.name}</span>
-                        <div className="variant_title" data-bind="text:$data.variant().title">Default
+                        <div className="variant_title">Default
                           Title
                         </div>
                       </div>
                     </td>
                     <td>
                       <div>
-                        <input min={1} max={99999} value={listItem.totalItem}  type="number" className="update_number" name="updates" />
+                        <input min={1} max={99999} value={listItem.totalItem} type="number" data-postId={listItem.id} onChange={this.props.onChangeTotalProduct} className="update_number" name="updates" />
+                      </div>
+                      <div>
                       </div>
                     </td>
                     <td>
-                      <span className="price" data-bind="textMoneyWithSymbol:$data.cost">{listItem.list_price}&nbsp;₫</span>
+                      <span className="price">
+                         <input min={1} max={99999} value={listItem.pricePrivate ? listItem.pricePrivate : listItem.list_price}
+                                data-postId={listItem.id} onChange={this.props.onChangeMoneyProduct} type="number"
+                                className="update_number update_price" style={{width: 80,fontSize:12}} name="updates" /></span>
                     </td>
-                    <td className="remove-cart-item">
-                      <a><i className="fa-delete" /></a>
+                    <td className="remove-cart-item"  >
+                      <a onClick={this.props.onDeleteItemCart.bind(this.props.onDeleteItemCart, listItem.id)} ><i className="fa-delete" /></a>
                     </td>
                   </tr>
 
@@ -151,8 +156,9 @@ class ListCart extends React.Component {
                   </tbody>
                   <tfoot>
                   <tr>
+                    {/*onClick = {this.orderCartToOdoo.bind(listCart)}*/}
                     <th colSpan={5}>
-                      <a className="btn-sum" onClick = {this.orderCartToOdoo.bind(this, listCart)}>
+                      <a className="btn-sum" >
                         <span>Tổng cộng </span>
                         <span >{this.props.totalPrice}&nbsp;₫</span>
                       </a>

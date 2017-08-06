@@ -17,6 +17,11 @@ class HomePage extends React.Component {
     }
     this.loadPostAction = this.loadPostAction.bind(this);
     this.tongCongCart = this.tongCongCart.bind(this);
+    this.onChangeMoneyProduct = this.onChangeMoneyProduct.bind(this);
+    this.onChangeTotalProduct = this.onChangeTotalProduct.bind(this);
+    this.onDeleteItemCart = this.onDeleteItemCart.bind(this);
+
+
   }
 
   componentWillMount() {
@@ -26,19 +31,16 @@ class HomePage extends React.Component {
   tongCongCart(listCart) {
     let totalCart = 0;
     listCart.forEach(item => {
-      totalCart += item.list_price;
+      totalCart += (item.pricePrivate ? item.pricePrivate : item.list_price) * (item.totalItem ? item.totalItem : 1) ;
     })
     this.setState({ totalPrice: totalCart});
   }
-
-
 
   loadPostAction(props) {
     let loadPost = postAction.loadPost();
     loadPost.then(rss => {
       return rss.json();
     }).then( listData => {
-      console.log("listData.datalistData.data", listData.data);
       this.setState({ postList: listData.data });
     }).catch(rss =>{
       console.log("errorrr ",rss);
@@ -46,10 +48,60 @@ class HomePage extends React.Component {
   }
 
   orderCart(post) {
-    console.log('Post la',  post);
+    //console.log('Post la',  post);
     post.totalItem = 1;
     let listCart = this.state.listCart;
-    listCart.push(post);
+    let checkIssetCart = 0;
+    listCart.forEach((item, index) => {
+      if(item.id == post.id) {
+        listCart[index]['totalItem'] += 1;
+        checkIssetCart = 1;
+      }
+    })
+    if(!checkIssetCart) {
+      listCart.push(post);
+    }
+    this.setState({ listCart: listCart });
+    this.tongCongCart(listCart);
+  }
+
+  onChangeMoneyProduct(evt) {
+    let priceVl = parseInt(evt.target.value);
+    let postId = evt.target.getAttribute('data-postId');
+    let listCart = this.state.listCart;
+    listCart.forEach((item, index) => {
+      // let obNew = item;
+      if(item.id == postId) {
+        listCart[index]['pricePrivate'] = priceVl;
+      }
+    })
+    this.setState({ listCart: listCart });
+    this.tongCongCart(listCart);
+  }
+
+
+  onChangeTotalProduct(evt) {
+    let total = parseInt(evt.target.value);
+    let postId = evt.target.getAttribute('data-postId');
+    let listCart = this.state.listCart;
+    listCart.forEach((item, index) => {
+      // let obNew = item;
+      if(item.id == postId) {
+        listCart[index]['totalItem'] = total;
+      }
+    })
+    this.setState({ listCart: listCart });
+    this.tongCongCart(listCart);
+  }
+
+  onDeleteItemCart(id) {
+    let listCart = this.state.listCart;
+    listCart.forEach((item, index) => {
+      // let obNew = item;
+      if(item.id == id) {
+        listCart.splice(index, 1);
+      }
+    })
     this.setState({ listCart: listCart });
     this.tongCongCart(listCart);
   }
@@ -91,41 +143,13 @@ class HomePage extends React.Component {
               </article>
             </section>{/* End section content product */}
           </div>{/* End Wrap product */}
-          <ListCart listCart = {listCart} totalPrice= {this.state.totalPrice}/>
+          <ListCart listCart = {listCart}  onDeleteItemCart={this.onDeleteItemCart} totalPrice= {this.state.totalPrice}
+                    onChangeTotalProduct={this.onChangeTotalProduct} onChangeMoneyProduct={this.onChangeMoneyProduct}/>
         </div>{/* End site-wrap */}
-        {/* currentProduct popover  */}
-          <div className="webui-popover right in webui-no-padding" style={{display: 'none', left: '27.5px', top: '194.5px'}}>
-            <div className="arrow" />
-            <div className="webui-popover-inner">
-              <div className="webui-popover-content">
-                <ul className="list-group">
-                  <li className="search-variant-wrapper" style={{display: 'block'}}>
-                    <input type="text" onkeyup="searchVariant(this)" className="txt-search-variant " placeholder="Tìm biến thể sản phẩm" />
-                  </li>
-                  {/* ko if: currentProduct() && currentProduct().variants() */}
-                  {/* ko foreach: currentProduct().variants() */}
-                  <li className="list-group-item ">
-                    <a className="addcart product-variant" href="https://onapp.haravan.com/posnew/sanpham?shop=dentmart.myharavan.com&timestamp=1498990680&signature=b83f26087defc5f2b032dfad22d407d04324e87b56291e98b040eb0748a4355b&_ga=2.134718129.1744621359.1498990641-323494687.1498990641#" data-bind="attr: { title: title, 'data-value': id }, fastclick: $root.addToCart" title="Màu sáng" data-value={1009594040}><span data-bind="text: title">Màu sáng</span> <span data-bind="attr: { class: inventory_class }, text: inventory_quantity" className="inventory-class inventory-management">10</span></a>
-                  </li>
-                  <li className="list-group-item ">
-                    <a className="addcart product-variant" href="https://onapp.haravan.com/posnew/sanpham?shop=dentmart.myharavan.com&timestamp=1498990680&signature=b83f26087defc5f2b032dfad22d407d04324e87b56291e98b040eb0748a4355b&_ga=2.134718129.1744621359.1498990641-323494687.1498990641#" data-bind="attr: { title: title, 'data-value': id }, fastclick: $root.addToCart" title="Màu tối" data-value={1009594041}><span data-bind="text: title">Màu tối</span> <span data-bind="attr: { class: inventory_class }, text: inventory_quantity" className="inventory-class inventory-management">10</span></a>
-                  </li>
-                  {/* /ko */}
-                  {/* /ko */}
-                </ul>
-              </div>
-            </div>
-          </div>
-        {/* listing đơn hàng */}
-        {/* listing settings */}
       </div>
     );
   }
 }
-
-
-
-
 
 
 function mapStateToProps(state, ownProps) {
