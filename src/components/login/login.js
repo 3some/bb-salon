@@ -23,7 +23,7 @@ class Login extends React.Component {
                         Đăng nhập
                       </label>
                     </div>
-                    <a href="http://localhost:3000/auth/facebook">
+                      <a href="http://taytrang.vn/auth/facebook">
                       <input className="btn btn-lg btn-primary btn-block" type="button" value="Đăng nhập với Facebook" /> </a>
                   </fieldset>
                 </form>
