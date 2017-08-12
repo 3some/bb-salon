@@ -18,7 +18,7 @@ class Menu extends React.Component {
               </div>
               <div className="name_avatar">
                 <span> admin </span>
-                <span>Siêu thị vật liệu nha khoa Denmart.vn</span>
+                <span>Siêu thị vật liệu nha khoa BeautyBee</span>
               </div>
             </li>
           </ul>

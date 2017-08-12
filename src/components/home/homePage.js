@@ -49,7 +49,7 @@ class HomePage extends React.Component {
 
   orderCart(post) {
     //console.log('Post la',  post);
-    post.totalItem = 1;
+    post.totalItem = post.totalItem ? post.totalItem : 1;
     let listCart = this.state.listCart;
     let checkIssetCart = 0;
     listCart.forEach((item, index) => {

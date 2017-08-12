@@ -4,12 +4,24 @@ import { bindActionCreators } from 'redux';
 import * as postAction from '../../actions/postAction' ;
 import  Menu from '../common/menu';
 import  Header from '../common/header';
+
 class ListCart extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      orderCart: false
+      orderCart: false,
+      tenKhachHang: '',
+      soDienThoai: '',
+      email: '',
+      diaChi: '',
+      ghiChuDonHang: ''
     }
+
+    this.onChangeTenKhach = this.onChangeTenKhach.bind(this);
+    this.onChangeSoDienThoai= this.onChangeSoDienThoai.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangeDiaChi = this.onChangeDiaChi.bind(this);
+    this.onChangeGhiChuDonHang = this.onChangeGhiChuDonHang.bind(this);
   }
 
 
@@ -17,6 +29,13 @@ class ListCart extends React.Component {
     let userIdOdoo = localStorage.getItem('userIdOdoo');
     let userIdSale = parseInt(localStorage.getItem('userIdSale'));
 
+    let x_detail_customers = {
+      tenKhachHang : this.state.tenKhachHang,
+      soDienThoai : this.state.soDienThoai,
+      email : this.state.email,
+      diaChi : this.state.diaChi,
+      ghiChuDonHang : this.state.ghiChuDonHang,
+    }
 
     let line_vals = [{
       "partner_id": userIdOdoo,
@@ -44,7 +63,8 @@ class ListCart extends React.Component {
       "source_id": false,
       "opportunity_id": false,
       "message_follower_ids": false,
-      "message_ids": false
+      "message_ids": false,
+      "x_detail_customers":   JSON.stringify(x_detail_customers)
     }]
     let orderLine = [];
     listCart.forEach(item => {
@@ -88,6 +108,32 @@ class ListCart extends React.Component {
         console.log("errorrr ",rss);
       })
   }
+
+  onChangeTenKhach(evt) {
+    let valueInput = evt.target.value;
+    this.setState({tenKhachHang: valueInput});
+  }
+
+  onChangeSoDienThoai(evt) {
+    let valueInput = evt.target.value;
+    this.setState({soDienThoai:  valueInput});
+  }
+
+  onChangeEmail(evt) {
+    let valueInput = evt.target.value;
+    this.setState({email : valueInput});
+  }
+
+  onChangeDiaChi(evt) {
+    let valueInput = evt.target.value;
+    this.setState({diaChi :valueInput});
+  }
+
+  onChangeGhiChuDonHang(evt) {
+    let valueInput = evt.target.value;
+    this.setState({ghiChuDonHang :valueInput});
+  }
+
 
 
   render() {
@@ -163,12 +209,7 @@ class ListCart extends React.Component {
                         <span >{this.props.totalPrice}&nbsp;₫</span>
                       </a>
                     </th>
-                    {this.state.orderCart ?
-                      <th>
-                        <p>Order Success!</p>
-                      </th>
-                      : ''
-                    }
+
                   </tr>
                   </tfoot>
                 </table>
@@ -181,117 +222,18 @@ class ListCart extends React.Component {
             <div id="purchase-form">
               <div className="col-4 ">
                 <div className="checkout-steps">
-                  <div className="checkout-step">
-                    <div className="shiping-ajax checkoutmethod">
-                      <div className="methoditem active">
-                        <label htmlFor="gatewaytienmat" className="lb-method">
-                          <span className="icontextgate methodtienmat">
-                            <img src="/static/images/money.png" />
-                            <span className="label-radio">Tiền mặt</span>
-                          </span>
-                          <input id="gatewaytienmat" className="input-method" type="radio" name="gateway" defaultValue="Tiền mặt" data-bind="checked: gateway" />
-                        </label>
-                        <span className="desc" />
-                      </div>
-                      <div className="methoditem">
-                        <label htmlFor="gatewayvisamaster" className="lb-method">
-                          <span className="icontextgate methodvisamaster">
-                            <img src="/static/images/creditcard.png" />
-                            <span className="label-radio">Visa/Master</span>
-                          </span>
-                          <input id="gatewayvisamaster" className="input-method" type="radio" name="gateway" defaultValue="Visa/Master" data-bind="checked: gateway" />
-                        </label>
-                        <span className="desc" />
-                      </div>
-                      <div className="methoditem">
-                        <label htmlFor="gatewaychuyenkhoan" className="lb-method">
-                          <span className="icontextgate methodchuyenkhoan">
-                            <img src="/static/images/banking.png" />
-                            <span className="label-radio">Chuyển khoản</span>
-                          </span>
-                          <input id="gatewaychuyenkhoan" className="input-method" type="radio" name="gateway" defaultValue="Chuyển khoản" data-bind="checked: gateway" />
-                        </label>
-                        <span className="desc" />
-                      </div>
-                      <div className="methoditem">
-                        <label htmlFor="gatewaycod" className="lb-method">
-                          <span className="icontextgate methodcod">
-                            <img src="/static/images/COD.png" />
-                            <span className="label-radio">COD</span>
-                          </span>
-                          <input id="gatewaycod" className="input-method" type="radio" name="gateway" defaultValue="COD" data-bind="checked: gateway" />
-                        </label>
-                        <span className="desc" />
-                      </div>
-                    </div>
-                  </div>
                   <table id="input-price">
                     <tbody>
                     <tr>
                       <td colSpan={2}>
-                        <label className="lb-1">Tạm tính</label>
+                        <br/>
+                        <label className="lb-1">Thành tiền </label>
                       </td>
                       <td colSpan={3} align="right">
-                        <span className="price" data-bind="textMoneyWithSymbol:subtotal">3,378,000&nbsp;₫</span>
+                        <br/>
+                        <span className="price" data-bind="textMoneyWithSymbol:subtotal">{this.props.totalPrice}&nbsp;₫</span>
                       </td>
                     </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <div className="box-discount">
-                          <label className="lb-1">Giảm giá theo</label>
-                        </div>
-                      </td>
-                      <td colSpan={3}>
-                        <div className="select-amount-wrap">
-                          <label htmlFor="discount_type_amount" className="select-amount">
-                            <input id="discount_type_amount" className="discount_type" type="radio" name="discount_type" defaultValue="Amount" data-bind="checked: discount_type" />
-                            <span className="lb-radio" />
-                            <span className="spsymbel">₫</span>
-                          </label>
-                          <label htmlFor="discount_type_percentage" className="select-amount">
-                            <input id="discount_type_percentage" className="discount_type" type="radio" name="discount_type" defaultValue="Percentage" data-bind="checked: discount_type" />
-                            <span className="lb-radio" />
-                            <span className="spsymbel">%</span>
-                          </label>
-                        </div>
-                        {/* ko if: discount_type() == 'Amount' */}
-                        <div className="input-group sale-percent full-width">
-                          <input type="text" className="form-control discount_value text-right" data-bind="moneyMask: discount_amount,valueUpdate: 'afterkeydown'" min={0} />
-                          <span className="input-group-addon">₫</span>
-                        </div>
-                        {/* /ko */}
-                        {/* ko if: discount_type() == 'Percentage' */}{/* /ko */}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <label className="lb-1">Thành tiền</label>
-                      </td>
-                      <td colSpan={3} align="right">
-                        <span className="price" data-bind="textMoneyWithSymbol:grand_total">3,378,000&nbsp;₫</span>
-                      </td>
-                    </tr>
-                    {/* ko if: grand_total() > 0 */}
-                    <tr>
-                      <td colSpan={2}>
-                        <label className="lb-1">Tiền khách đưa <i>(F8)</i></label>
-                      </td>
-                      <td colSpan={3} align="right">
-                        <div className="input-group sale-percent fullwidth">
-                          <input id="customer_paying_amt" type="text" className="form-control text-right" data-bind="moneyMask: customer_paying_amt,valueUpdate: 'afterkeydown'" min={0} />
-                          <span className="input-group-addon">₫</span>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <label className="lb-1">Tiền thừa trả khách</label>
-                      </td>
-                      <td colSpan={3} align="right">
-                        <span className="price" data-bind="textMoneyWithSymbol: cash_paying_guests">0&nbsp;₫</span>
-                      </td>
-                    </tr>
-                    {/* /ko */}
                     </tbody>
                   </table>
                   <div className="checkout-step">
@@ -300,20 +242,20 @@ class ListCart extends React.Component {
                       <span>Thêm thông tin đơn hàng</span></a>
                     <div className="customer-info">
                       <div className="box-cart">
-                        <input placeholder="Tên khách hàng" className="checkoutinput" type="text" data-bind="value:first_name" />
+                        <input placeholder="Tên khách hàng" className="checkoutinput" type="text" value={this.state.tenKhachHang}  onChange = {this.onChangeTenKhach} />
                         <div className="block-1 phoneblock">
-                          <input placeholder="Số điện thoại" className="checkoutinput" type="tel" data-bind="value:phone" />
+                          <input placeholder="Số điện thoại" className="checkoutinput" type="tel"  value={this.state.soDienThoai}  onChange = {this.onChangeSoDienThoai} />
                           <button type="button" value="Search" data-bind="fastclick: searchCustomerByPhone" className="fa-search" />
                           {/* ko if: SuggestCustomer().length > 0 && searchCustomerType() == 'phone' && searchCustomerDisplay() */}
                           {/* /ko */}
                         </div>
                         <div className="block-1">
-                          <input placeholder="Email" className="checkoutinput" type="email" data-bind="value:email" />
-                          <button type="button" value="Search" data-bind="fastclick: searchCustomerByEmail" className="fa-search" />
+                          <input placeholder="Email" className="checkoutinput" type="email"  />
+                          <button type="button" value="Search" data-bind="fastclick: searchCustomerByEmail"   value={this.state.email}  onChange = {this.onChangeEmail}  className="fa-search" />
                           {/* ko if: SuggestCustomer().length > 0 && searchCustomerType() == 'email' && searchCustomerDisplay() */}
                           {/* /ko */}
                         </div>
-                        <textarea placeholder="Địa chỉ" className="checkoutinput" data-bind="value:address1" defaultValue={""} />
+                        <textarea placeholder="Địa chỉ" className="checkoutinput"  value={this.state.diaChi}  onChange = {this.onChangeDiaChi}  />
                         <div className="select-wrapper provincesblock">
                           <select className="checkoutinput" data-bind="options: provinces,
                             optionsText: function(item) {
@@ -399,7 +341,7 @@ class ListCart extends React.Component {
                           </select>
                           <span className="spselectdown">▼</span>
                         </div>
-                        <textarea id="checkout_note" className="checkoutinput" placeholder="Ghi chú đơn hàng" rows={2} data-bind="value:note" defaultValue={""} />
+                        <textarea id="checkout_note" className="checkoutinput" placeholder="Ghi chú đơn hàng"  value={this.state.ghiChuDonHang}  onChange = {this.onChangeGhiChuDonHang}  rows={2}  />
                         <div className="linezone">
                           <label htmlFor="dathanhtoantaicuahang">
                             <input id="dathanhtoantaicuahang" type="checkbox" data-bind="checked: financialStatus" />
@@ -414,16 +356,16 @@ class ListCart extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <button type="submit" className="btn-checkout" data-bind="fastclick:submitcheckout">Đặt
-                    hàng
-                  </button>
+                  <button type="button" className="btn-checkout"  onClick = {this.orderCartToOdoo.bind(this,listCart)}> Đặt hàng </button>
                 </div>
               </div>
             </div> {/* End purchase-form */}
-            <div id="checkoutsuccess">
-              <a id="faback2" className="fa-back" href="javascript:" style={{display: 'none'}} />
-              {/* ko if: CurrentOrder() */}{/* /ko */}
-            </div> {/* End checkoutsuccess */}
+            <div id="checkoutsuccess" style={{display: "block"}}>
+              {this.state.orderCart ?
+                  <p>Order Success!</p>
+                : ''
+              }
+            </div>
           </div>{/* End checkout */}
         </div>
       </div>
@@ -432,4 +374,16 @@ class ListCart extends React.Component {
 }
 
 
-export default  ListCart;
+function mapStateToProps(state, ownProps) {
+  return {
+
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return  bindActionCreators( dispatch);
+}
+
+export default connect(mapStateToProps)(ListCart);
+
+// export default  ListCart;
