@@ -38,9 +38,9 @@ class ListCart extends React.Component {
     }
 
     let line_vals = [{
-      "partner_id": userIdOdoo,
-      "partner_invoice_id": userIdOdoo,
-      "partner_shipping_id": userIdOdoo,
+      "partner_id": userIdSale,
+      "partner_invoice_id": userIdSale,
+      "partner_shipping_id": userIdSale,
       "date_order": "2017-07-22 15:47:35",
       "validity_date": "2017-09-01",
       "pricelist_id": 1,
@@ -50,7 +50,7 @@ class ListCart extends React.Component {
       "warehouse_id": 1,
       "incoterm": false,
       "picking_policy": "direct",
-      "user_id": userIdSale,
+      "user_id": userIdOdoo,
       "tag_ids": [],
       "team_id": 1,
       "client_order_ref": false,
