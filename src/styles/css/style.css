@@ -3057,3 +3057,24 @@ border-radius: 4px;
   font-size: 15px;
   color: red;
 }
+
+
+/*.priceLv {*/
+  /*position: absolute;*/
+  /*display: none;*/
+  /*z-index:999;*/
+/*}*/
+
+/*.priceLv ul { background:gray;}*/
+
+/*.priceLv ul li {*/
+  /*width: 100%;*/
+  /*border: 1px solid #cec9c9;*/
+  /*padding: 8px;*/
+  /*border-radius: 5px;*/
+  /*font-size: 12px;*/
+  /*color: white;*/
+  /*cursor:pointer;*/
+/*}*/
+
+.price:hover .priceLv{ display:block;}

@@ -181,14 +181,14 @@ class ListCart extends React.Component {
                     <td className="cart-title">
                       <div className="name_cart">
                         <span> {listItem.name}</span>
-                        <div className="variant_title">Default
-                          Title
-                        </div>
+                        <div className="variant_title">Giá tối thiểu {listItem.x_price_lv1}</div>
                       </div>
                     </td>
                     <td>
                       <div>
-                        <input min={1} max={99999} value={listItem.totalItem} type="number" data-postId={listItem.id} onChange={this.props.onChangeTotalProduct} className="update_number" name="updates" />
+                        <input min={listItem.x_price_lv1 } max={99999} value={listItem.totalItem} type="number"
+                             data-postId={listItem.id} onChange={this.props.onChangeTotalProduct}
+                             className="update_number" name="updates" />
                       </div>
                       <div>
                       </div>
@@ -197,7 +197,16 @@ class ListCart extends React.Component {
                       <span className="price">
                          <input min={1} max={99999} value={listItem.pricePrivate ? listItem.pricePrivate : listItem.list_price}
                                 data-postId={listItem.id} onChange={this.props.onChangeMoneyProduct} type="number"
-                                className="update_number update_price" style={{width: 80,fontSize:12}} name="updates" /></span>
+                                className="update_number update_price" style={{width: 80,fontSize:12}} name="updates" />
+                            {/*<div className="priceLv">*/}
+                            {/*<ul>*/}
+                              {/*<li > Giá Lv: {listItem.x_price_lv1}</li>*/}
+                              {/*<li > Giá ĐX: {listItem.pricePrivate ? listItem.pricePrivate : listItem.list_price}</li>*/}
+                            {/*</ul>*/}
+                          {/*</div>*/}
+                      </span>
+
+
                     </td>
                     <td className="remove-cart-item"  >
                       <a onClick={this.props.onDeleteItemCart.bind(this.props.onDeleteItemCart, listItem.id)} ><i className="fa-delete" /></a>
