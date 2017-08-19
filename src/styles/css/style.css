@@ -3037,3 +3037,23 @@ border-radius: 4px;
     }
 }
 
+
+.waitServerReturn { display:none; position: fixed; width:100%; height: 100%; background-color: black; opacity: 0.5;}
+
+.waitServerReturn img {
+  top: 40%;
+  left: 44%;
+  position: absolute;
+}
+
+#checkoutsuccess .success {
+  text-align: center;
+  font-size: 15px;
+  color: blue;
+}
+
+#checkoutsuccess .danger {
+  text-align: center;
+  font-size: 15px;
+  color: red;
+}

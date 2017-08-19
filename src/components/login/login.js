@@ -1,5 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import { url } from '../../config/index';
+
 class Login extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -23,7 +25,8 @@ class Login extends React.Component {
                         Đăng nhập
                       </label>
                     </div>
-                      <a href="http://taytrang.vn/auth/facebook">
+                      {/*<a href="http://taytrang.vn/auth/facebook">*/}
+                    <a href={ url + "/auth/facebook"}>
                       <input className="btn btn-lg btn-primary btn-block" type="button" value="Đăng nhập với Facebook" /> </a>
                   </fieldset>
                 </form>

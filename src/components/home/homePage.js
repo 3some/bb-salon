@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router'
 import * as postAction from '../../actions/postAction' ;
 import  Menu from '../common/menu';
 import  Header from '../common/header';
@@ -25,6 +26,10 @@ class HomePage extends React.Component {
   }
 
   componentWillMount() {
+    let userIdOdoo = localStorage.getItem('userIdOdoo');
+    if(!userIdOdoo) {
+      return browserHistory.push('/login')
+    }
     this.loadPostAction(this.props);
 
   }

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as postAction from '../../actions/postAction' ;
 import  Menu from '../common/menu';
 import  Header from '../common/header';
+import moment from 'moment';
 
 class ListCart extends React.Component {
   constructor(props, context) {
@@ -26,6 +27,7 @@ class ListCart extends React.Component {
 
 
   orderCartToOdoo(listCart) {
+    $('.waitServerReturn').css('display', 'block');
     let userIdOdoo = localStorage.getItem('userIdOdoo');
     let userIdSale = parseInt(localStorage.getItem('userIdSale'));
 
@@ -38,19 +40,19 @@ class ListCart extends React.Component {
     }
 
     let line_vals = [{
-      "partner_id": userIdSale,
-      "partner_invoice_id": userIdSale,
-      "partner_shipping_id": userIdSale,
-      "date_order": "2017-07-22 15:47:35",
-      "validity_date": "2017-09-01",
+      "partner_id": parseInt(userIdOdoo),
+      "partner_invoice_id": parseInt(userIdOdoo),
+      "partner_shipping_id": parseInt(userIdOdoo),
+      "date_order": moment().format('YYYY-MM-DD HH:mm:ss'),
+      "validity_date": false,
       "pricelist_id": 1,
-      "payment_term_id": 2,
+      "payment_term_id": false,
       "order_line": [],
       "note": false,
       "warehouse_id": 1,
       "incoterm": false,
       "picking_policy": "direct",
-      "user_id": userIdOdoo,
+      "user_id": userIdSale,
       "tag_ids": [],
       "team_id": 1,
       "client_order_ref": false,
@@ -64,7 +66,7 @@ class ListCart extends React.Component {
       "opportunity_id": false,
       "message_follower_ids": false,
       "message_ids": false,
-      "x_detail_customers":   JSON.stringify(x_detail_customers)
+     "x_detail_customers":   JSON.stringify(x_detail_customers)
     }]
     let orderLine = [];
     listCart.forEach(item => {
@@ -97,7 +99,9 @@ class ListCart extends React.Component {
     orderCart.then(rss => {
         return rss.json();
       }).then( listData => {
-        console.log("listData.datalistData.data", listData);
+      $('.waitServerReturn').css('display', 'none');
+      $('#checkoutsuccess').css('display', 'block');
+        // console.log("listData.datalistData.data", listData, orderLine);
         if(!listData.err) {
           this.setState({ orderCart: true });
         }
@@ -105,7 +109,10 @@ class ListCart extends React.Component {
           this.setState({ orderCart: false });
         }
       }).catch(rss =>{
+        $('.waitServerReturn').css('display', 'none');
         console.log("errorrr ",rss);
+        $('#checkoutsuccess').css('display', 'block');
+        this.setState({ orderCart: false });
       })
   }
 
@@ -154,7 +161,7 @@ class ListCart extends React.Component {
                       <a id="cartfaback" className="fa-back" />
                     </th>
                     <th colSpan={4} className="theadcarttotal">
-                      <span className="col-cart text-c">Giỏ hàng (Items)</span>
+                      <span className="col-cart text-c">Giỏ hàng của bạn</span>
                     </th>
                   </tr>
                   <tr>
@@ -251,108 +258,96 @@ class ListCart extends React.Component {
                         </div>
                         <div className="block-1">
                           <input placeholder="Email" className="checkoutinput" type="email"  />
-                          <button type="button" value="Search" data-bind="fastclick: searchCustomerByEmail"   value={this.state.email}  onChange = {this.onChangeEmail}  className="fa-search" />
-                          {/* ko if: SuggestCustomer().length > 0 && searchCustomerType() == 'email' && searchCustomerDisplay() */}
-                          {/* /ko */}
+                          <button type="button" value="Search"   value={this.state.email}  onChange = {this.onChangeEmail}  className="fa-search" />
                         </div>
                         <textarea placeholder="Địa chỉ" className="checkoutinput"  value={this.state.diaChi}  onChange = {this.onChangeDiaChi}  />
-                        <div className="select-wrapper provincesblock">
-                          <select className="checkoutinput" data-bind="options: provinces,
-                            optionsText: function(item) {
-                                return item().name
-                            },
-                            value: selectedProvince,
-                            optionsCaption: 'Vui lòng chọn tỉnh/thành phố'">
-                            <option value>Vui lòng chọn tỉnh/thành phố</option>
-                            <option value>Hồ Chí Minh</option>
-                            <option value>Hà Nội</option>
-                            <option value>An Giang</option>
-                            <option value>Bình Định</option>
-                            <option value>Bắc Giang</option>
-                            <option value>Bình Dương</option>
-                            <option value>Bắc Kạn</option>
-                            <option value>Bạc Liêu</option>
-                            <option value>Bắc Ninh</option>
-                            <option value>Bình Phước</option>
-                            <option value>Bến Tre</option>
-                            <option value>Bình Thuận</option>
-                            <option value>Bà Rịa - Vũng Tàu</option>
-                            <option value>Cao Bằng</option>
-                            <option value>Cà Mau</option>
-                            <option value>Cần Thơ</option>
-                            <option value>Đà Nẵng</option>
-                            <option value>Điện Biên</option>
-                            <option value>Đắk Lắk</option>
-                            <option value>Đồng Nai</option>
-                            <option value>Đắk Nông</option>
-                            <option value>Đồng Tháp</option>
-                            <option value>Gia Lai</option>
-                            <option value>Hải Dương</option>
-                            <option value>Hà Giang</option>
-                            <option value>Hà Nam</option>
-                            <option value>Hòa Bình</option>
-                            <option value>Hải Phòng</option>
-                            <option value>Hà Tĩnh</option>
-                            <option value>Hậu Giang</option>
-                            <option value>Hưng Yên</option>
-                            <option value>Kiên Giang</option>
-                            <option value>Khánh Hòa</option>
-                            <option value>Kon Tum</option>
-                            <option value>Long An</option>
-                            <option value>Lâm Đồng</option>
-                            <option value>Lai Châu</option>
-                            <option value>Lào Cai</option>
-                            <option value>Lạng Sơn</option>
-                            <option value>Nghệ An</option>
-                            <option value>Ninh Bình</option>
-                            <option value>Nam Định</option>
-                            <option value>Ninh Thuận</option>
-                            <option value>Phú Thọ</option>
-                            <option value>Phú Yên</option>
-                            <option value>Quảng Bình</option>
-                            <option value>Quảng Ngãi</option>
-                            <option value>Quảng Nam</option>
-                            <option value>Quảng Ninh</option>
-                            <option value>Quảng Trị</option>
-                            <option value>Sơn La</option>
-                            <option value>Sóc Trăng</option>
-                            <option value>Thái Bình</option>
-                            <option value>Tiền Giang</option>
-                            <option value>Thanh Hóa</option>
-                            <option value>Tây Ninh</option>
-                            <option value>Tuyên Quang</option>
-                            <option value>Thừa Thiên Huế</option>
-                            <option value>Trà Vinh</option>
-                            <option value>Thái Nguyên</option>
-                            <option value>Vĩnh Long</option>
-                            <option value>Vĩnh Phúc</option>
-                            <option value>Yên Bái</option>
-                          </select>
-                          <span className="spselectdown">▼</span>
-                        </div>
-                        <div className="select-wrapper">
-                          <select className="checkoutinput" data-bind="options: provinceDistricts,
-                            optionsText: function(item) {
-                                return item.name()
-                            },
-                            value: selectedDistrict,
-                            optionsCaption: 'Vui lòng chọn quận/huyện'">
-                            <option value>Vui lòng chọn quận/huyện</option>
-                          </select>
-                          <span className="spselectdown">▼</span>
-                        </div>
+                        {/*<div className="select-wrapper provincesblock">*/}
+                          {/*<select className="checkoutinput" data-bind="options: provinces,*/}
+                            {/*optionsText: function(item) {*/}
+                                {/*return item().name*/}
+                            {/*},*/}
+                            {/*value: selectedProvince,*/}
+                            {/*optionsCaption: 'Vui lòng chọn tỉnh/thành phố'">*/}
+                            {/*<option value>Vui lòng chọn tỉnh/thành phố</option>*/}
+                            {/*<option value>Hồ Chí Minh</option>*/}
+                            {/*<option value>Hà Nội</option>*/}
+                            {/*<option value>An Giang</option>*/}
+                            {/*<option value>Bình Định</option>*/}
+                            {/*<option value>Bắc Giang</option>*/}
+                            {/*<option value>Bình Dương</option>*/}
+                            {/*<option value>Bắc Kạn</option>*/}
+                            {/*<option value>Bạc Liêu</option>*/}
+                            {/*<option value>Bắc Ninh</option>*/}
+                            {/*<option value>Bình Phước</option>*/}
+                            {/*<option value>Bến Tre</option>*/}
+                            {/*<option value>Bình Thuận</option>*/}
+                            {/*<option value>Bà Rịa - Vũng Tàu</option>*/}
+                            {/*<option value>Cao Bằng</option>*/}
+                            {/*<option value>Cà Mau</option>*/}
+                            {/*<option value>Cần Thơ</option>*/}
+                            {/*<option value>Đà Nẵng</option>*/}
+                            {/*<option value>Điện Biên</option>*/}
+                            {/*<option value>Đắk Lắk</option>*/}
+                            {/*<option value>Đồng Nai</option>*/}
+                            {/*<option value>Đắk Nông</option>*/}
+                            {/*<option value>Đồng Tháp</option>*/}
+                            {/*<option value>Gia Lai</option>*/}
+                            {/*<option value>Hải Dương</option>*/}
+                            {/*<option value>Hà Giang</option>*/}
+                            {/*<option value>Hà Nam</option>*/}
+                            {/*<option value>Hòa Bình</option>*/}
+                            {/*<option value>Hải Phòng</option>*/}
+                            {/*<option value>Hà Tĩnh</option>*/}
+                            {/*<option value>Hậu Giang</option>*/}
+                            {/*<option value>Hưng Yên</option>*/}
+                            {/*<option value>Kiên Giang</option>*/}
+                            {/*<option value>Khánh Hòa</option>*/}
+                            {/*<option value>Kon Tum</option>*/}
+                            {/*<option value>Long An</option>*/}
+                            {/*<option value>Lâm Đồng</option>*/}
+                            {/*<option value>Lai Châu</option>*/}
+                            {/*<option value>Lào Cai</option>*/}
+                            {/*<option value>Lạng Sơn</option>*/}
+                            {/*<option value>Nghệ An</option>*/}
+                            {/*<option value>Ninh Bình</option>*/}
+                            {/*<option value>Nam Định</option>*/}
+                            {/*<option value>Ninh Thuận</option>*/}
+                            {/*<option value>Phú Thọ</option>*/}
+                            {/*<option value>Phú Yên</option>*/}
+                            {/*<option value>Quảng Bình</option>*/}
+                            {/*<option value>Quảng Ngãi</option>*/}
+                            {/*<option value>Quảng Nam</option>*/}
+                            {/*<option value>Quảng Ninh</option>*/}
+                            {/*<option value>Quảng Trị</option>*/}
+                            {/*<option value>Sơn La</option>*/}
+                            {/*<option value>Sóc Trăng</option>*/}
+                            {/*<option value>Thái Bình</option>*/}
+                            {/*<option value>Tiền Giang</option>*/}
+                            {/*<option value>Thanh Hóa</option>*/}
+                            {/*<option value>Tây Ninh</option>*/}
+                            {/*<option value>Tuyên Quang</option>*/}
+                            {/*<option value>Thừa Thiên Huế</option>*/}
+                            {/*<option value>Trà Vinh</option>*/}
+                            {/*<option value>Thái Nguyên</option>*/}
+                            {/*<option value>Vĩnh Long</option>*/}
+                            {/*<option value>Vĩnh Phúc</option>*/}
+                            {/*<option value>Yên Bái</option>*/}
+                          {/*</select>*/}
+                          {/*<span className="spselectdown">▼</span>*/}
+                        {/*</div>*/}
+                        {/*<div className="select-wrapper">*/}
+                          {/*<select className="checkoutinput" data-bind="options: provinceDistricts,*/}
+                            {/*optionsText: function(item) {*/}
+                                {/*return item.name()*/}
+                            {/*},*/}
+                            {/*value: selectedDistrict,*/}
+                            {/*optionsCaption: 'Vui lòng chọn quận/huyện'">*/}
+                            {/*<option value>Vui lòng chọn quận/huyện</option>*/}
+                          {/*</select>*/}
+                          {/*<span className="spselectdown">▼</span>*/}
+                        {/*</div>*/}
                         <textarea id="checkout_note" className="checkoutinput" placeholder="Ghi chú đơn hàng"  value={this.state.ghiChuDonHang}  onChange = {this.onChangeGhiChuDonHang}  rows={2}  />
-                        <div className="linezone">
-                          <label htmlFor="dathanhtoantaicuahang">
-                            <input id="dathanhtoantaicuahang" type="checkbox" data-bind="checked: financialStatus" />
-                            <span className="checktitle">Đã thanh toán tại cửa hàng</span>
-                          </label>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <label htmlFor="dagiaohang">
-                            <input id="dagiaohang" type="checkbox" data-bind="checked: fulfillmentStatus" />
-                            <span className="checktitle">Đã giao hàng</span>
-                          </label>
-                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -360,14 +355,17 @@ class ListCart extends React.Component {
                 </div>
               </div>
             </div> {/* End purchase-form */}
-            <div id="checkoutsuccess" style={{display: "block"}}>
+            <div id="checkoutsuccess">
               {this.state.orderCart ?
-                  <p>Order Success!</p>
-                : ''
+                  <p className="success"> Đặt hàng thành công. Xin cảm ơn quý khách !</p>
+                : <p className="danger">Đặt hàng không thành công, xin thử lại!</p>
               }
             </div>
           </div>{/* End checkout */}
         </div>
+
+        <div className="waitServerReturn"><img src="static/images/wait.gif" alt=""/></div>
+
       </div>
     )
   }
